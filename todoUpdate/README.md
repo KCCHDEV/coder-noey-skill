@@ -1,1 +1,6 @@
 # กำลังจะทดลองเพิ่ม
+
+- Fha Ai สำหรับวางแผน
+- Masa Ai สำหรับออกแบบ logic
+- Eria Ai สำหรับออกแบบ Ui
+- 9ARM Ai สำหรับ Project Manager EIEI
