@@ -15,6 +15,14 @@ description: >
 
 ---
 
+# mem.md — ระบบความจำระยะยาว
+
+> เป้าหมายคือทำระบบให้สามารถย้ายไป Ai ตัวอื่นได้หรือระบบอื่นได้โดยบัญทึกความทรงจำลงไปในระบบไฟล์ `mem.md`
+> เปิดใช้งานโดยการบอกว่า ให้จำไว้ด้วย จำไว้ หรือ อื่นๆที่สำคัญให้จำไว้ แต่ไม่ต้องทั้งหมด
+> ใช้กับ Codex, Claude Code, Cursor, Cline, Roo Code, OpenCode, Aider, Windsurf, Gemini CLI หรือ AI Agent อื่น ๆ  
+
+---
+
 ## 0. Quick Start For Agents
 
 ```txt
