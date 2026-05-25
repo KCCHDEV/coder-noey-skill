@@ -123,6 +123,35 @@ Read work.md then continue from:
 Set-Content -Path (Join-Path $TargetDir "work.md") -Value $workContent -Encoding UTF8
 Write-Log "  Created: work.md"
 
+# ----- startup.md -----
+$startupContent = @"
+# Startup - Project Entry Point
+
+> AI Agent: Read this file before starting work.
+
+## Read Order
+1. startup.md (this file)
+2. work.md
+3. memory/mem.md
+4. AGENTS.md
+5. .opencode/skills/<your-agent>/SKILL.md
+
+## Team
+- Yui: Orchestrator - routes tasks
+- Ney: DEV - implement
+- Fha: Planner - spec
+- Masa: Logic - design
+- Eria: UI - design
+- Mochi: PM - manage
+
+## Rules
+- No Chinese - Thai + English only
+- Update work.md after every action
+- Archive before deleting code
+"@
+Set-Content -Path (Join-Path $TargetDir "startup.md") -Value $startupContent -Encoding UTF8
+Write-Log "  Created: startup.md"
+
 # ----- memory/mem.md -----
 $memContent = @"
 # mem.md - Long-Term Memory

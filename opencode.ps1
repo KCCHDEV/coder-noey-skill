@@ -2,6 +2,20 @@
 
 $cfg = Join-Path (Get-Location) "opencode.json"
 
+# ----- NEY Startup Banner -----
+Write-Host ""
+Write-Host "  ╭──────────────────────────────────────────────╮" -ForegroundColor Cyan
+Write-Host "  │                                              │" -ForegroundColor Cyan
+Write-Host "  │      NEY Coder AI - Model Config             │" -ForegroundColor Cyan
+Write-Host "  │                                              │" -ForegroundColor Cyan
+Write-Host "  │    Select your AI model for OpenCode         │" -ForegroundColor Cyan
+Write-Host "  │    Team: Yui, Ney, Fha, Masa, Eria, Mochi   │" -ForegroundColor Cyan
+Write-Host "  │                                              │" -ForegroundColor Cyan
+Write-Host "  ╰──────────────────────────────────────────────╯" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  Tip: Run '.\startup.ps1' for team health check" -ForegroundColor Green
+Write-Host ""
+
 $fallbackModels = @(
     "opencode-go/deepseek-v4-flash",
     "opencode-go/deepseek-v4-pro",

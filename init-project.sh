@@ -148,6 +148,34 @@ EOF
 
 log "  Created: work.md"
 
+# ----- startup.md -----
+cat > "$TARGET_DIR/startup.md" << 'EOF'
+# Startup — Project Entry Point
+
+> AI Agent: อ่านไฟล์นี้ก่อนเริ่มทำงาน
+
+## Read Order
+1. startup.md (ไฟล์นี้)
+2. work.md
+3. memory/mem.md
+4. AGENTS.md
+5. .opencode/skills/<your-agent>/SKILL.md
+
+## Team
+- Yui: Orchestrator — routes tasks
+- Ney: DEV — implement
+- Fha: Planner — spec
+- Masa: Logic — design
+- Eria: UI — design
+- Mochi: PM — manage
+
+## Rules
+- No Chinese — Thai + English only
+- Update work.md after every action
+- Archive before deleting code
+EOF
+log "  Created: startup.md"
+
 # ----- memory/mem.md -----
 log "Creating memory files..."
 cat > "$TARGET_DIR/memory/mem.md" << 'EOF'
