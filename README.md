@@ -381,3 +381,51 @@ MIT License
 # 🚀 NEY Coder Ai skill
 
 Reflective AI Engineering สำหรับ AI Coding Agent ยุคใหม่
+
+---
+
+## 📦 Cross-Platform Setup
+
+### Windows (PowerShell 5.1+)
+
+```powershell
+.\setup.ps1
+```
+
+หรือ setup เฉพาะ OpenCode config:
+
+```powershell
+.\opencode.ps1
+```
+
+### Linux / macOS / Windows (Git Bash / WSL)
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+### Manual: .opencode/skills/
+
+```txt
+.opencode/
+└── skills/
+    ├── yui/SKILL.md
+    ├── ney/SKILL.md
+    ├── fha/SKILL.md
+    ├── masa/SKILL.md
+    ├── eria/SKILL.md
+    ├── mochi/SKILL.md
+    └── shared/memory/
+```
+
+รัน `setup.sh` หรือ `setup.ps1` เพื่อ auto-install
+
+### Requirements
+
+| Platform | Requirement |
+|---|---|
+| Windows | PowerShell 5.1+ (built-in) |
+| macOS | Bash (built-in) |
+| Linux | Bash (built-in) |
+| OpenCode | `opencode` CLI installed |
