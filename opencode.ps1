@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 $cfg = Join-Path (Get-Location) "opencode.json"
 
