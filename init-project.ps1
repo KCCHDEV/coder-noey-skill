@@ -21,12 +21,18 @@
 param(
     [string]$Dir = "",
     [string]$Name = "",
+    [string]$Agents = "all",
+    [switch]$Mini,
     [switch]$NoGit,
     [switch]$Copy
 )
 
 $ErrorActionPreference = "Stop"
 $NevRepo = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RepoUrl = "https://github.com/KCCHDEV/coder-noey-skill"
+$RawUrl = "https://raw.githubusercontent.com/KCCHDEV/coder-noey-skill/main"
+$InRepo = Test-Path (Join-Path $NevRepo "agents" "ney" "SKILL.md")
+$Variant = if ($Mini) { "mini" } else { "SKILL" }
 
 function Write-Log    { Write-Host "[NEV] $($args[0])" -ForegroundColor Green }
 function Write-Warn   { Write-Host "[WARN] $($args[0])" -ForegroundColor Yellow }
@@ -188,18 +194,45 @@ Write-Log "  Created: archive/ARCHIVE_LOG.md"
 Write-Log "Setting up OpenCode skills..."
 $skillsDir = Join-Path $TargetDir ".opencode" "skills"
 
-foreach ($agent in $Agents) {
-    $src = Join-Path $NevRepo "agents" $agent "SKILL.md"
-    $dst = Join-Path $skillsDir $agent "SKILL.md"
+if ($Agents -eq "all") {
+    $agentList = @("yui", "ney", "fha", "masa", "eria", "mochi")
+} else {
+    $agentList = $Agents.Split(',') | ForEach-Object { $_.Trim() }
+}
 
-    if (-not (Test-Path $src)) {
-        Write-Warn "  Source not found: $src — skipping $agent"
-        continue
+function Download-Skill {
+    param([string]$Agent, [string]$Variant, [string]$Destination)
+    New-Item -ItemType Directory -Path (Split-Path $Destination -Parent) -Force | Out-Null
+
+    if ($InRepo) {
+        $src = Join-Path $NevRepo "agents" $Agent "$Variant.md"
+        if (-not (Test-Path $src)) { $src = Join-Path $NevRepo "agents" $Agent "SKILL.md" }
+        if (Test-Path $src) {
+            if ($Copy) {
+                Copy-Item -LiteralPath $src -Destination $Destination -Force
+            } else {
+                # Windows: copy is safest (no native symlink for files easily)
+                Copy-Item -LiteralPath $src -Destination $Destination -Force
+            }
+            return $true
+        }
+        return $false
     }
 
-    New-Item -ItemType Directory -Path (Split-Path $dst -Parent) -Force | Out-Null
-    Copy-Item -LiteralPath $src -Destination $dst -Force
-    Write-Log "  Copied: $agent → .opencode/skills/$agent/"
+    $url = "$RawUrl/agents/$Agent/$Variant.md"
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $Destination -UseBasicParsing -ErrorAction Stop | Out-Null
+        return $true
+    } catch { return $false }
+}
+
+foreach ($agent in $agentList) {
+    $dst = Join-Path $skillsDir $agent "SKILL.md"
+    if (Download-Skill -Agent $agent -Variant $Variant -Destination $dst) {
+        Write-Log "  $Variant: $agent → .opencode/skills/$agent/"
+    } else {
+        Write-Warn "  Skipping $agent — source not found"
+    }
 }
 
 # ----- .opencode/opencode.json -----

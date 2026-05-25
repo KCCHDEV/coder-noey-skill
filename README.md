@@ -421,6 +421,32 @@ chmod +x setup.sh
 
 รัน `setup.sh` หรือ `setup.ps1` เพื่อ auto-install
 
+### Variants
+
+เลือกขนาด skill:
+
+| Mode | ขนาด | เหมาะกับ |
+|---|---|---|
+| **Full** | ~200-500 lines | Production, real project |
+| **Mini** | ~20-40 lines | Quick test, small project |
+
+### Select Specific Agents
+
+```bash
+# Only install specific agents
+./setup.sh         # interactive selection
+./init-project.sh --agents ney,eria,mochi  # only these 3
+```
+
+### Auto-Download
+
+ไม่ต้อง clone repo ก็ใช้ได้ — script จะ auto-download จาก GitHub:
+
+```bash
+# ใช้ standalone (ไม่มี repo)
+curl -sL https://raw.githubusercontent.com/KCCHDEV/coder-noey-skill/main/setup.sh | bash
+```
+
 ### Requirements
 
 | Platform | Requirement |

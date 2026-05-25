@@ -24,6 +24,17 @@ TARGET_DIR=""
 PROJECT_NAME=""
 INIT_GIT=true
 LINK_MODE=true
+NEV_VARIANT="SKILL"   # or "mini"
+NEV_AGENTS="all"
+
+REPO_URL="https://github.com/KCCHDEV/coder-noey-skill"
+RAW_URL="https://raw.githubusercontent.com/KCCHDEV/coder-noey-skill/main"
+
+# Detect if running from NEY repo
+IN_REPO=false
+if [ -f "$NEV_REPO/agents/ney/SKILL.md" ]; then
+    IN_REPO=true
+fi
 
 usage() {
     echo "Usage: $0 [options] [project-dir]"
@@ -32,6 +43,8 @@ usage() {
     echo "  --name <name>      Project name (default: dir name)"
     echo "  --no-git           Skip git init"
     echo "  --copy             Copy files instead of symlink"
+    echo "  --mini             Use compact SKILL (mini.md)"
+    echo "  --agents <list>    Agents to install: all or comma-sep (e.g. ney,fha,masa)"
     echo "  --help             Show this help"
     echo ""
     echo "If project-dir is omitted, uses current directory."
@@ -41,6 +54,8 @@ usage() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --name) PROJECT_NAME="$2"; shift 2 ;;
+        --mini) NEV_VARIANT="mini"; shift ;;
+        --agents) NEV_AGENTS="$2"; shift 2 ;;
         --no-git) INIT_GIT=false; shift ;;
         --copy) LINK_MODE=false; shift ;;
         --help|-h) usage ;;
@@ -207,37 +222,53 @@ log "Setting up OpenCode skills..."
 
 mkdir -p "$TARGET_DIR/.opencode/skills"
 
-AGENTS=("yui" "ney" "fha" "masa" "eria" "mochi")
+if [ "$NEV_AGENTS" = "all" ]; then
+    AGENTS=("yui" "ney" "fha" "masa" "eria" "mochi")
+else
+    IFS=',' read -ra AGENTS <<< "$NEV_AGENTS"
+fi
+
+VARIANT_FILE="$NEV_VARIANT"
+# mini mode uses mini.md, full uses SKILL.md
+[ "$VARIANT_FILE" = "mini" ] || VARIANT_FILE="SKILL"
+
+download_skill() {
+    local agent="$1" variant="$2" out="$3"
+    mkdir -p "$(dirname "$out")"
+
+    if [ "$IN_REPO" = true ]; then
+        local src="$NEV_REPO/agents/$agent/$variant.md"
+        [ ! -f "$src" ] && src="$NEV_REPO/agents/$agent/SKILL.md"
+        if [ -f "$src" ]; then
+            if [ "$LINK_MODE" = true ] && [ "$(uname -s)" != "MINGW"* ]; then
+                ln -sf "$src" "$out"
+            else
+                cp "$src" "$out"
+            fi
+            return 0
+        fi
+        return 1
+    fi
+
+    # Download from GitHub
+    local url="$RAW_URL/agents/$agent/$variant.md"
+    if command -v curl &>/dev/null; then
+        curl -sL "$url" -o "$out" && return 0
+    elif command -v wget &>/dev/null; then
+        wget -q "$url" -O "$out" && return 0
+    fi
+    return 1
+}
+
 for agent in "${AGENTS[@]}"; do
-    src="$NEV_REPO/agents/$agent/SKILL.md"
+    agent="$(echo "$agent" | xargs)"  # trim
     dst="$TARGET_DIR/.opencode/skills/$agent/SKILL.md"
-
-    if [ ! -f "$src" ]; then
-        warn "  Source not found: $src — skipping $agent"
-        continue
-    fi
-
-    mkdir -p "$(dirname "$dst")"
-
-    if [ "$LINK_MODE" = true ] && [ "$(uname -s)" != "MINGW"* ]; then
-        ln -sf "$src" "$dst"
-        log "  Linked: $agent → .opencode/skills/$agent/"
+    if download_skill "$agent" "$VARIANT_FILE" "$dst"; then
+        log "  $([ "$VARIANT_FILE" = "mini" ] && echo "Mini" || echo "Full"): $agent → .opencode/skills/$agent/"
     else
-        cp "$src" "$dst"
-        log "  Copied: $agent → .opencode/skills/$agent/"
+        warn "  Skipping $agent — source not found"
     fi
 done
-
-# Agent list for config
-AGENTS_JSON="["
-first=true
-for agent in "${AGENTS[@]}"; do
-    if [ -f "$NEV_REPO/agents/$agent/SKILL.md" ]; then
-        if [ "$first" = true ]; then first=false; else AGENTS_JSON+=","; fi
-        AGENTS_JSON+="\n    \"$agent\""
-    fi
-done
-AGENTS_JSON+="\n  ]"
 
 # ----- .opencode/opencode.json -----
 if [ ! -f "$TARGET_DIR/.opencode/opencode.json" ]; then
