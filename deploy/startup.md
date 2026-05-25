@@ -1,82 +1,91 @@
-# NEY Coder AI — Deploy Startup
+# NEY Coder AI — Startup
 
-> ระบบถูก deploy เรียบร้อยแล้ว  
-> อ่านไฟล์นี้ก่อนเริ่มใช้ OpenCode
-
----
-
-## ═══ Team Overview ═══
-
-```
-  Agent     Role                  Skill File
-  ─────────────────────────────────────────────────
-  Yui       Orchestrator          skills/yui/SKILL.md
-  Ney       DEV Implementer       skills/ney/SKILL.md
-  Fha       Project Planner       skills/fha/SKILL.md
-  Masa      Logic Designer        skills/masa/SKILL.md
-  Eria      UI/UX Designer        skills/eria/SKILL.md
-  Mochi     Project Manager       skills/mochi/SKILL.md
-```
+> อ่านไฟล์นี้ก่อนเริ่มทำงานทุกครั้ง
+> นี่คือจุดเริ่มต้น (entry point) สำหรับ AI Agent ทุกตัว
 
 ---
 
-## ═══ Read Order (สำหรับ AI Agent) ═══
+## Hello! I am your NEY AI Team.
+
+```
+  ╭──────────────────────────────────────╮
+  │   NEY Coder AI — Multi-Agent Ready   │
+  │                                      │
+  │   Agents: Yui, Ney, Fha, Masa,       │
+  │           Eria, Mochi                │
+  │                                      │
+  │   Memory: shared/memory/             │
+  │   Skills: agents/<name>/SKILL.md     │
+  ╰──────────────────────────────────────╯
+```
+
+---
+
+## 1. Read Order (สิ่งที่ต้องอ่านก่อนเริ่ม)
 
 ```txt
-1. deploy/startup.md    ← ไฟล์นี้
-2. startup.md           ← (ถ้ามีที่ root project)
-3. work.md              ← session memory
-4. memory/mem.md        ← long-term decisions
-5. skills/<your>/SKILL.md ← อ่าน skill ของตัวเอง
+1. startup.md           ← ไฟล์นี้ — ทำความรู้จักระบบ
+2. shared/memory/work.md — session ปัจจุบัน (มีอะไรค้าง)
+3. shared/memory/mem.md  — ความจำระยะยาว (decisions)
+4. shared/memory/summary.md — ภาพรวมระบบ
+5. agents/yui/SKILL.md   — Yui orchestrator (entry point)
+6. agents/ney/SKILL.md   — Ney DEV (ถ้าต้อง implement)
+7. agents/<others>/SKILL.md — ตามงานที่ได้รับ
 ```
 
 ---
 
-## ═══ How To Use ═══
+## 2. Who Am I? (ตรวจสอบว่าตัวเองเป็น agent ไหน)
 
-```bash
-# เปิด OpenCode
-opencode
+อ่าน `SKILL.md` ใน folder ของตัวเอง — ดูที่ `name` field ใน frontmatter:
 
-# AI จะอ่าน startup.md → work.md → skills/ → เริ่มทำงาน
+```yaml
+---
+name: <agent-name>
+---
 ```
 
-หรือ run health check:
+ถ้าเป็น Yui → รับ request, เลือก mode, route
+ถ้าเป็น Ney → implement
+ถ้าเป็น Fha → plan
+ถ้าเป็น Masa → logic design
+ถ้าเป็น Eria → UI design
+ถ้าเป็น Mochi → PM
 
-```bash
-# Windows
-.\startup.ps1
+---
 
-# Linux / Mac
-./setup.sh
+## 3. What To Do First
+
+```txt
+1. อ่าน startup.md และ work.md
+2. เช็ค shared/memory/ ว่ามี task ค้างหรือไม่
+3. ถ้ามี task → ทำต่อ
+4. ถ้าไม่มี → รอ request จาก user
+5. ใช้ภาษาที่ user ใช้ (Thai / English)
+6. No Chinese — Thai + English only
 ```
 
 ---
 
-## ═══ Installed Skills ═══
+## 4. Communication Rules
 
-```
-deploy/skills/
-├── yui/SKILL.md       (or mini.md)
-├── ney/SKILL.md
-├── fha/SKILL.md
-├── masa/SKILL.md
-├── eria/SKILL.md
-├── mochi/SKILL.md
-└── shared/memory/
-    ├── work.md
-    ├── mem.md
-    └── summary.md
+```txt
+- Terminal-friendly: สั้น ตรง ใช้ table + emoji น้อย
+- Auto-Invoke: ถ้าเจองานไม่ใช่ของเรา → auto-call agent ที่ใช่
+- ถ้าไม่แน่ใจ → อ่าน work.md / mem.md ก่อน
+- ทุก action → update work.md
 ```
 
 ---
 
-## ═══ Communication Rules ═══
+## 5. Quick Reference
 
-- Thai + English only — no Chinese
-- Terminal-friendly output: tables + minimal emoji
-- Auto-Invoke: agents call each other automatically
-- Archive before deleting: never hard delete
+| Command | Action |
+|---|---|
+| `setup.sh` / `setup.ps1` | Install agent skills |
+| `init-project.sh` / `init-project.ps1` | Init new project |
+| `opencode.ps1` | Interactive model config |
+| `startup.ps1` | Startup message + health check |
 
 ---
 
