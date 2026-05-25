@@ -429,3 +429,51 @@ chmod +x setup.sh
 | macOS | Bash (built-in) |
 | Linux | Bash (built-in) |
 | OpenCode | `opencode` CLI installed |
+
+---
+
+## 🏗️ Init New Project
+
+สร้างโปรเจกต์ใหม่พร้อมระบบ NEY Agent:
+
+```bash
+# Linux / macOS / Git Bash
+./init-project.sh --name "my-project" ../my-project
+
+# Windows PowerShell
+.\init-project.ps1 -Name "my-project" -Dir ..\my-project
+```
+
+หรือใช้ current directory:
+
+```bash
+./init-project.sh
+```
+
+### Options
+
+| Flag | Description |
+|---|---|
+| `--name` / `-Name` | Project name (default: directory name) |
+| `--no-git` / `-NoGit` | Skip git init |
+| `--copy` / `-Copy` | Copy files instead of symlink |
+| `--help` | Show help |
+
+### What it creates
+
+```
+my-project/
+├── work.md              # session memory
+├── AGENTS.md            # agent instructions
+├── memory/
+│   ├── mem.md           # long-term memory
+│   └── summary.md       # project overview
+├── archive/
+│   └── ARCHIVE_LOG.md   # archive log
+├── docs/
+│   ├── plans/           # Fha's specs
+│   └── designs/         # Masa + Eria designs
+└── .opencode/
+    ├── opencode.json    # config
+    └── skills/          # agent skills (symlink/copy)
+```
